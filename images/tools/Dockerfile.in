@@ -1,0 +1,24 @@
+# Copyright Greg Haskins All Rights Reserved
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+FROM hyperledger/fabric-baseimage:x86_64-0.3.2
+ENV FABRIC_CFG_PATH /etc/hyperledger/fabric
+VOLUME /etc/hyperledger/fabric
+ADD  payload/sampleconfig.tar.bz2 $FABRIC_CFG_PATH
+COPY cryptogen.sm2 /usr/local/bin
+COPY configtxgen /usr/local/bin
+COPY configtxlator /usr/local/bin
+COPY peer /usr/local/bin
+
+COPY libltdl.so.7 /usr/lib
+
+ENV BCCSP_PKCS11_LOG /etc/hyperledger/pkcs11
+RUN mkdir -p $BCCSP_PKCS11_LOG
+COPY swsds.ini /etc
+COPY upkcs11.ini /etc
+COPY libswsds.so /usr/lib
+COPY libupkcs11.so /usr/lib
+COPY libswsds.so_csm34_v2.6.1.0_x64 /usr/lib
+
+RUN ldconfig
